@@ -24,6 +24,29 @@ public class NotificationsResource {
                 .build();
     }
 
+    @GET
+    @Path("/track")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Track getTrackInJSON() {
+
+        Track track = new Track();
+        track.setTitle("Enter Sandman");
+        track.setSinger("Metallica");
+
+        return track;
+
+    }
+
+    @POST
+    @Path("/track")
+    @Consumes(MediaType.APPLICATION_JSON)
+    public Response createTrackInJSON(Track track) {
+
+        String result = "Track saved : " + track;
+        return Response.status(201).entity(result).build();
+
+    }
+
     @POST
     @Path("/post/")
     @Consumes(MediaType.APPLICATION_JSON)

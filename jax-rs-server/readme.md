@@ -2,6 +2,8 @@
 ### DESCRIPTION
 # this is a rest server application based on jax-rs and Jersey
 
+# JAX-RS is nothing more than a specification. Jersey is a implementation for JAX-RS, which includes Glassfish.
+
 # ISSUES
 # post is not working - may be own json marshaling
 
