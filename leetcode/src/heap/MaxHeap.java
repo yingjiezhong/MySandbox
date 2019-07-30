@@ -9,7 +9,7 @@ public class MaxHeap implements IHeap{
 
     public MaxHeap(int[] input) {
         queue = input.clone();
-        initialize();
+        initialize2();
     }
 
     // heapify the initial array
@@ -36,8 +36,26 @@ public class MaxHeap implements IHeap{
 
                 if (queue[larger] > queue[i]) {
                     swap(larger, i);
+
+                    // do more to send the node down
+
+
+
+
                 }
             }
+            System.out.println("iteration " + i);
+            System.out.println(this);
+        }
+
+    }
+
+    private void initialize2() {
+
+        for (int i = queue.length/2; i >= 0; i--) {
+            heapify(i);
+            System.out.println("iteration " + i);
+            System.out.println(this);
         }
 
     }
@@ -70,17 +88,57 @@ public class MaxHeap implements IHeap{
 
     @Override
     public int poll() {
-        int ret = queue[0];
-        System.arraycopy(queue, 0, queue, 0, queue.length-1);
-        queue[0] = queue[queue.length-1];
-        heapify();
-        return ret;
+        if (queue != null && queue.length > 1) {
+            int ret = queue[0];
+            int[] q1 = new int[queue.length - 1];
+            System.arraycopy(queue, 0, q1, 0, queue.length - 1);
+            q1[0] = queue[queue.length - 1];
+            queue = q1.clone();
+            heapify(0);
+            return ret;
+        } else if (queue != null && queue.length == 1){
+            int ret = queue[0];
+            queue = null;
+            return ret;
+        } else {
+            return -1;
+        }
     }
 
-    private void heapify() {
+    /**
+     * sending the indexed node down if needed
+     */
+    private void heapify(int index) {
 
-        int index = 0;
         while(true) {
+            int lc = leftChild(index);
+            int rc = rightChild(index);
+            if (lc > queue.length-1) {
+                break;
+            } else if (rc > queue.length -1){
+                if (queue[index] < queue[lc]) {
+                    swap(index, lc);
+                    index = lc;
+                } else {
+                    break;
+                }
+            } else {
+                if (queue[lc] > queue[rc]) {
+                    if (queue[index] < queue[lc]) {
+                        swap(index, lc);
+                        index = lc;
+                    } else {
+                        break;
+                    }
+                } else {
+                    if (queue[index] < queue[rc]) {
+                        swap(index, rc);
+                        index = rc;
+                    } else {
+                        break;
+                    }
+                }
+            }
 
         }
     }

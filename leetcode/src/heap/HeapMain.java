@@ -9,5 +9,11 @@ public class HeapMain {
 
         System.out.println(maxHeap);
 
+        int  r = -1;
+        do {
+            r = maxHeap.poll();
+            System.out.println(r);
+        } while (r != -1);
+
     }
 }
