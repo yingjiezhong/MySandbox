@@ -1,0 +1,6 @@
+
+kubectl apply -f .\hello.yaml
+kubectl rollout status deployment.v1.apps/python-deployment
+kubectl get deployment
+kubectl get service
+kubectl delete -f .\hello.yaml
