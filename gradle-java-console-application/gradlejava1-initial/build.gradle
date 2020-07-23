@@ -33,4 +33,7 @@ jar {
     configurations.runtimeClasspath.collect {File file -> zipTree(file)}
   }
 
+  wrapper {
+    gradleVersion = '6.5'
+  }
 }
