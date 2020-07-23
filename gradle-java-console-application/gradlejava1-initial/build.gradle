@@ -2,6 +2,9 @@ plugins {
   id 'java'
 }
 
+group = 'com.denofprogramming'
+version = '0.0.1-SNAPSHT'
+
 repositories {
     delegate.mavenCentral()
 }
@@ -14,10 +17,20 @@ dependencies {
 
 }
 
-/*group = 'com.denofprogramming'
-version = '0.0.1-SNAPSHOT'
+jar {
 
+  baseName = "$project.name-all"
 
-sourceCompatibility = 1.8
-targetCompatibility = 1.8
-*/
+  manifest {
+
+    attributes 'Implementation-Title' : 'Gradle all inclusive jar',
+                'Implmentation-Version' : version,
+                'Created-By' : 'me',
+                'Main-Class' : 'come.denofprogramming.random.App'
+  }
+
+  from {
+    configurations.runtimeClasspath.collect {File file -> zipTree(file)}
+  }
+
+}
