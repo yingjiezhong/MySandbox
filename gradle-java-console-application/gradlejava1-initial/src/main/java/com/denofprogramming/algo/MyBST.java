@@ -6,6 +6,7 @@ public class MyBST {
 
     private Node root;
     private int size;
+
     public enum Order {
         PREORDER,
         INORDER,
@@ -31,7 +32,44 @@ public class MyBST {
     }
 
     public void deleteNode(int value) {
+        root = deleteNode(root, value);
+    }
 
+    private Node deleteNode(Node node, int value) {
+
+        if (node == null) {
+            return null;
+        }
+
+        if (value < node.value) {
+            node.left = deleteNode(node.left, value);
+        } else if (value > node.value) {
+            node.right = deleteNode(node.right, value);
+        } else {
+            if (node.left == null) {
+                return node.right;
+            } else if (node.right == null) {
+                return node.left;
+            } else {
+                node.value = minValue(node.right);
+
+                // why need it?
+                node.right = deleteNode(node.right, node.value);
+
+            }
+        }
+
+        return node;
+
+    }
+
+    private int minValue(Node node) {
+        int v = node.value;
+        while (node.left != null) {
+            v = node.value;
+            node = node.left;
+        }
+        return v;
     }
 
     private Node addNode(Node node, int value) {
@@ -187,6 +225,49 @@ public class MyBST {
         list.clear();
         list = bst.traverse(Order.DEPTHFIRST);
         System.out.println("depthFirst: " + list);
+
+
+        bst.deleteNode(0);
+
+        // delete nodes
+        System.out.println("----- delete nodes: 1 and 5");
+        bst.deleteNode(1);
+        bst.deleteNode(5);
+        list.clear();
+        list = bst.traverse(Order.INORDER);
+        System.out.println("inorder: " + list);
+
+        list.clear();
+        list = bst.traverse(Order.PREORDER);
+        System.out.println("preorder: " + list);
+
+        list.clear();
+        list = bst.traverse(Order.BREADTHFIRST);
+        System.out.println("breadthFirst: " + list);
+
+        list.clear();
+        list = bst.traverse(Order.DEPTHFIRST);
+        System.out.println("depthFirst: " + list);
+
+        // delete nodes
+        System.out.println("----- delete nodes: " + 4);
+        bst.deleteNode(4);
+        list.clear();
+        list = bst.traverse(Order.INORDER);
+        System.out.println("inorder: " + list);
+
+        list.clear();
+        list = bst.traverse(Order.PREORDER);
+        System.out.println("preorder: " + list);
+
+        list.clear();
+        list = bst.traverse(Order.BREADTHFIRST);
+        System.out.println("breadthFirst: " + list);
+
+        list.clear();
+        list = bst.traverse(Order.DEPTHFIRST);
+        System.out.println("depthFirst: " + list);
+
     }
 
 }
