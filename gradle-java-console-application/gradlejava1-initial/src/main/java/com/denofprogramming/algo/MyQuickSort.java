@@ -7,22 +7,45 @@ import java.util.List;
 public class MyQuickSort {
 
     public static void main (String[] args) {
-        int[] arr = {2, 5, 3, 9, 6, 1, 4, 8};
+//        int[] arr = {2, 5, 3, 9, 6, 1, 4, 8};
+        int[] arr = {2, 5, 3, 9, 1, 6, 4, 8};
         for (int i : arr) {
             System.out.println(i);
         }
         MyQuickSort sort = new MyQuickSort();
-        sort.sort(arr, 0, arr.length-1);
 
+
+        int n = 1;
+        int position = arr.length-n;
+        int v = sort.nthLargest(arr, 0, arr.length-1, position);
+        System.out.println(n + "th largest value: " + v);
+
+        sort.sort(arr, 0, arr.length-1);
         System.out.println("sorted: " + Arrays.asList(arr).toString());
         for (int i : arr) {
             System.out.println(i);
         }
     }
 
+    public int nthLargest(int[] arr, int l, int h, int p) {
+
+        int returnVal = -1;
+
+        int pivotPosition = partition2(arr, l, h);
+        if (pivotPosition < p) {
+            returnVal = nthLargest(arr, pivotPosition + 1, h, p);
+        } else if (pivotPosition > p){
+            returnVal = nthLargest(arr, l, pivotPosition - 1, p);
+        } else {
+            returnVal = arr[pivotPosition];
+        }
+
+        return returnVal;
+    }
+
     public void sort(int[] arr, int low, int high) {
         if (low < high) {
-            int pivotPosition = partition2(arr, low, high);
+            int pivotPosition = partition(arr, low, high);
             sort(arr, low, pivotPosition -1);
             sort(arr, pivotPosition + 1, high );
         }
@@ -38,6 +61,7 @@ public class MyQuickSort {
             while (a[i] < p) {
                 i++;
 //                if (i>h-1) break;
+                // no need, since a[h] is p
             }
             while (a[j] > p ) {
                 j--;
@@ -53,18 +77,14 @@ public class MyQuickSort {
     }
 
     // return pivot position
-    public int partition(int[] arr, int low, int high) {
+    // {2, 5, 3, 9, 1, 6, 4, 8}
+    public int partition(int[] arr, int l, int h) {
 
-        int i = low - 1;    // < i: lower than pivot value
-        int j = low;        // < i+1 to j: larger than pilot value
-        int pivot = arr[high];
+        int i = l - 1;    // < i: lower than pivot value
+        int j = l;        // < i+1 to j: larger than pilot value
+        int pivot = arr[h];
 
-        while (arr[j] < pivot) {
-            j++;
-        }
-        i = j -1;
-
-        while (j < high) {
+        while (j < h) {
             if (arr[j] > pivot) {
                 j++;
             } else {
