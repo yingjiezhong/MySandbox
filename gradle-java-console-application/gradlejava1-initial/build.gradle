@@ -9,31 +9,40 @@ repositories {
     delegate.mavenCentral()
 }
 
+// for junit5
+test {
+    useJUnitPlatform()
+
+}
+
 dependencies { 
 
     implementation 'org.apache.commons:commons-math3:3.6.1'
-    
-    testImplementation 'junit:junit:4.12'
+    implementation 'org.junit.jupiter:junit-jupiter:5.4.2'
+    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.3.1'
+    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.3.1'
+
+//    testImplementation 'junit:junit:4.12'
 
 }
 
-jar {
+ jar {
 
-  baseName = "$project.name-all"
+   baseName = "$project.name-all"
 
-  manifest {
+   manifest {
 
-    attributes 'Implementation-Title' : 'Gradle all inclusive jar',
-                'Implmentation-Version' : version,
-                'Created-By' : 'me',
-                'Main-Class' : 'come.denofprogramming.random.App'
-  }
+     attributes 'Implementation-Title' : 'Gradle all inclusive jar',
+                 'Implmentation-Version' : version,
+                 'Created-By' : 'me',
+                 'Main-Class' : 'come.denofprogramming.random.App'
+   }
 
-  from {
-    configurations.runtimeClasspath.collect {File file -> zipTree(file)}
-  }
+   from {
+     configurations.runtimeClasspath.collect {File file -> zipTree(file)}
+   }
 
-  wrapper {
-    gradleVersion = '6.5'
-  }
-}
+   wrapper {
+     gradleVersion = '6.5'
+   }
+ }
