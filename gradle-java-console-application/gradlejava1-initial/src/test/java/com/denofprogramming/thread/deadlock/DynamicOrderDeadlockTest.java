@@ -22,9 +22,9 @@ class DynamicOrderDeadlockTest {
 
     @Test
     void transferMoney() throws InterruptedException {
-        final int THREADS = 10;
+        final int THREADS = 20;
         final int ACCOUNTS = 5;
-        final int TRANSACTIONS = 1000;
+        final int TRANSACTIONS = 10000;
 
         final Random rnd = new Random();
         final Account[] accounts = new Account[ACCOUNTS];
@@ -45,10 +45,12 @@ class DynamicOrderDeadlockTest {
                         try {
                             DynamicOrderDeadlock.transferMoney(accounts[from], accounts[to], new DollarAmount(500));
                         } catch (InsufficientFundsException e) {
-                            e.printStackTrace();
+//                            e.printStackTrace();
                         }
                     }
+                    if (i%100 == 0) {
                     System.out.println("Transaction " + i + " --- " + Thread.currentThread().getName());
+                    }
                 }
 
             };
@@ -59,6 +61,15 @@ class DynamicOrderDeadlockTest {
         for (int i = 0; i < THREADS; i++) {
             threads[i].join();
         }
+
+        int sum = 0;
+        for (int i = 0; i < ACCOUNTS; i++) {
+            System.out.println("account " + i + ": " + accounts[i].getBalance().value());
+            sum += accounts[i].getBalance().value();
+
+        }
+        System.out.println("Sum: " + sum);
+
 
         System.out.println("completed");
 
