@@ -1,10 +1,23 @@
 package com.denofprogramming.algo;
 
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
+
+import java.util.stream.Stream;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 
 class MyLinkedListTest {
+
+    @BeforeEach
+    void init() {
+        System.out.println("@BeforeEach - executes before each test method in this class");
+    }
+
+    @AfterEach
+    void tearDown() {
+        System.out.println("@AfterEach - executed after each test method.");
+    }
 
     @Test
     void reverse() {
@@ -16,4 +29,18 @@ class MyLinkedListTest {
 
         assertTrue(true);
     }
+
+    @Test
+    void sortedMerge() {
+        MyLinkedList l1 = new MyLinkedList(1, 3, 5, 7, 11, 12);
+        MyLinkedList l2 = new MyLinkedList(2, 4, 6, 8, 9, 10);
+
+        MyLinkedList.Node n = MyLinkedList.sortedMerge(l1.getHead(), l2.getHead());
+
+        MyLinkedList mergedList = new MyLinkedList(n);
+
+        System.out.println(mergedList.toString());
+
+    }
+
 }
