@@ -55,6 +55,33 @@ public class MyLinkedList {
         }
     }
 
+    public static Node merge2(Node l1, Node l2) {
+        Node head = new Node(0);
+
+        Node tail = head;
+
+        while (true) {
+            if (l1 == null) {
+                tail.next = l2;
+                break;
+            }
+            if (l2 == null) {
+                tail.next = l1;
+                break;
+            }
+
+            if (l1.v < l2.v) {
+                tail.next = l1;
+                l1 = l1.next;
+            } else {
+                tail.next = l2;
+                l2 = l2.next;
+            }
+            tail = tail.next;
+
+        }
+        return head.next;
+    }
 
     // find which one is smaller and use it as the new head
     public static Node merge(Node l1, Node l2) {
