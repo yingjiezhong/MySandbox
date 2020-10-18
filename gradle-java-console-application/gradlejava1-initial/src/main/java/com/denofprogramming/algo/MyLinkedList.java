@@ -37,6 +37,7 @@ public class MyLinkedList {
         return head;
     }
 
+    // it works
     public static Node sortedMerge(Node n1, Node n2) {
 
         if (n1 == null) {
@@ -55,31 +56,47 @@ public class MyLinkedList {
     }
 
 
-    // merge l2 to l1 and return l1
-//    public static MyLinkedList merge(MyLinkedList l1, MyLinkedList l2) {
+    // find which one is smaller and use it as the new head
+    public static Node merge(Node l1, Node l2) {
 
-//        Node n1 = l1.head;
-//        Node n2 = l2.head;
-//
-//
-//        while (n2 != null) {
-//
-//            while (n1 != null) {
-//                if (n1.next.v < n2.v) {
-//                    n1 = n1.next;
-//                } else {
-//                    // insert n2 before n1.next
-//                    Node temp_n1_next = n1.next;
-//                    Node temp_n2_next = n2.next;
-//                    n1.next = n2;
-//
-//                    n2 = temp_n2_next;
-//                    n1
-//                }
-//        }
-//
-//
-//    }
+        Node n1, n2, head;
+        if ( l1.v < l2.v)
+        {
+            head = l1;
+            n1 = l1;
+            n2 = l2;
+        } else {
+            head = l2;
+            n1 = l2;
+            n2 = l1;
+        }
+
+        while (n1 != null && n2 != null) {
+            while (n2 != null) {
+                if (n1.next == null || n1.next.v < n2.v) {
+                    n1 = n1.next;
+                    break;
+                } else {
+                    // insert n2 before n1.next
+                    // cache
+                    Node n1_next = n1.next;
+                    Node n2_next = n2.next;
+
+                    // mutate
+                    n1.next = n2;
+                    n2.next = n1_next;
+
+                    n2 = n2_next;
+                    n1 = n1.next;
+                }
+            }
+
+
+        }
+
+        return head;
+
+    }
 
     public void reverse() {
 

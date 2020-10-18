@@ -43,4 +43,18 @@ class MyLinkedListTest {
 
     }
 
+    @Test
+    void merge() {
+        MyLinkedList l1 = new MyLinkedList(1, 3, 5, 7, 11, 12);
+        MyLinkedList l2 = new MyLinkedList(2, 4, 6, 8, 9, 10);
+        System.out.println(l1.toString());
+        System.out.println(l2.toString());
+
+        MyLinkedList.Node n = MyLinkedList.merge(l1.getHead(), l2.getHead());
+
+        MyLinkedList mergedList = new MyLinkedList(n);
+
+        System.out.println(mergedList.toString());
+    }
+
 }
