@@ -27,6 +27,34 @@ public class MyBST {
         }
     }
 
+    public Node getRoot() {
+        return root;
+    }
+
+    // verify a node and all children are BST
+    public boolean verify(Node n) {
+        Integer min = Integer.MIN_VALUE;
+        Integer max = Integer.MAX_VALUE;
+        return boundaryCheck(n, min, max);
+    }
+
+    private boolean boundaryCheck(Node n, Integer min, Integer max) {
+
+        if (n == null) {
+            return true;
+        }
+
+        System.out.println(n.value + " | " + min + " | " + max);
+
+        if (n.value < min || n.value > max) {
+            return false;
+        }
+
+        // left child less than parent's value
+        // right child is larger than parent's
+        return boundaryCheck(n.left, min, n.value) && boundaryCheck(n.right, n.value, max);
+    }
+
     public void addNode(int value) {
         addNode(root, value);
     }
@@ -51,9 +79,10 @@ public class MyBST {
             } else if (node.right == null) {
                 return node.left;
             } else {
+                // min value does not have left child
                 node.value = minValue(node.right);
 
-                // why need it?
+                // why need it - the min value is replaced, now need to delete it
                 node.right = deleteNode(node.right, node.value);
 
             }
