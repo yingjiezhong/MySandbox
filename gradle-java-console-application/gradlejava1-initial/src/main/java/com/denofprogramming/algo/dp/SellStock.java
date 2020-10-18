@@ -1,4 +1,4 @@
-package com.denofprogramming.algo;
+package com.denofprogramming.algo.dp;
 
 public class SellStock {
 

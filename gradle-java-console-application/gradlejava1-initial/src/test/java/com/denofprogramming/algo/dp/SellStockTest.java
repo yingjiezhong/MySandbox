@@ -1,5 +1,6 @@
-package com.denofprogramming.algo;
+package com.denofprogramming.algo.dp;
 
+import com.denofprogramming.algo.dp.SellStock;
 import org.junit.jupiter.api.*;
 
 import static org.junit.jupiter.api.Assertions.*;
