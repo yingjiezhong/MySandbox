@@ -21,7 +21,7 @@ public class PalindromicSubstring {
             }
         }
 
-        // fill the rest
+        // fill the rest, diagonally from center to up right corner
         for (int j = 2; j < s.length(); j++) {
             for (int i = 0; i < s.length()-j; i++) {
                 t[i][j+i] = (c[i] == c[j+i] && t[i+1][j+i-1] == 1) ? 1 : 0;
@@ -31,6 +31,15 @@ public class PalindromicSubstring {
             }
         }
 
+        // cannot fill in each row
+//        for (int i = 0; i < s.length()-2; i++) {
+//            for (int j = 2 + i; j < s.length(); j++) {
+//                t[i][j] = (c[i] == c[j] && t[i+1][j-1] == 1) ? 1 : 0;
+//                if (t[i][j] == 1) {
+//                    max = Math.max(j-i+1, max);
+//                }
+//            }
+//        }
         return max;
     }
 }
