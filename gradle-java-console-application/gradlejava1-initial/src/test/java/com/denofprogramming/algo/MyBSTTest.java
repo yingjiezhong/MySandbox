@@ -34,4 +34,11 @@ class MyBSTTest {
         h = bst.height();
         assertEquals(3, h);
     }
+
+    @Test
+    void nthLargest() {
+        MyBST bst = new MyBST(4, 2, 1, 3, 6, 5, 7);
+        int ret = bst.nthLargest(2);
+        assertEquals(6, ret);
+    }
 }

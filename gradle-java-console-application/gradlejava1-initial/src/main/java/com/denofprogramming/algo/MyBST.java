@@ -27,6 +27,35 @@ public class MyBST {
         }
     }
 
+    public int nthLargest(int n) {
+        Count cur = new Count();
+        nthLargest(root, n, cur);
+        return 0;
+    }
+
+    public class Count {
+        int c = 0;
+    }
+
+    private void nthLargest(Node node, int n, Count cur) {
+
+        if (node == null || cur.c >= n) {
+            return;
+        }
+
+        nthLargest(node.right, n, cur);
+
+        cur.c++;
+
+        if (cur.c == n) {
+            System.out.println("nth largest is " + node.value);
+            return;
+        }
+
+        nthLargest(node.left, n, cur);
+
+    }
+
     public int height() {
 
         int h = -1;
