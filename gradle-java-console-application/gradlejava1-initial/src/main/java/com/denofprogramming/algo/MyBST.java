@@ -27,6 +27,29 @@ public class MyBST {
         }
     }
 
+    public int height() {
+
+        int h = -1;
+
+        h = height(root, h);
+
+        return h;
+
+    }
+
+    private int height(Node n, int h) {
+
+        if (n == null) {
+            return h;
+        }
+
+        h++;
+
+        h = Math.max(height(n.left, h), height(n.right, h));
+
+        return h;
+    }
+
     public Node getRoot() {
         return root;
     }
@@ -46,7 +69,7 @@ public class MyBST {
 
         System.out.println(n.value + " | " + min + " | " + max);
 
-        if (n.value < min || n.value > max) {
+        if (n.value <= min || n.value >= max) {
             return false;
         }
 
@@ -55,8 +78,30 @@ public class MyBST {
         return boundaryCheck(n.left, min, n.value) && boundaryCheck(n.right, n.value, max);
     }
 
+
     public void addNode(int value) {
         addNode(root, value);
+    }
+
+    public void replaceNode(int from, int to) {
+        root = replaceNode(root, from, to);
+    }
+
+    private Node replaceNode(Node node, int from, int to) {
+
+        if (node == null) {
+            return null;
+        }
+
+        if (from < node.value) {
+            node.left = replaceNode(node.left, from, to);
+        } else if (from > node.value) {
+            node.right = replaceNode(node.right, from, to);
+        } else {
+            System.out.println("replaced value from: " + node.value + " to: " + to);
+            node.value = to;
+        }
+        return node;
     }
 
     public void deleteNode(int value) {
