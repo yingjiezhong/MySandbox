@@ -1,0 +1,160 @@
+Challenge Lab 1 - Create and Manage Cloud Resources
+
+status: passed on 11/08/2020
+
+==================================
+# task 1: create a project jumphost to perform maintenance
+
+gcloud config set compute/zone us-east1-b
+
+gcloud compute instances create nucleus-jumphost --machine-type f1-micro
+
+gcloud compute instances list
+
+
+# task 2: create a kubernetes service cluster to run application
+
+gcloud container clusters create nucleus-cluster
+
+gcloud container clusters get-credentials nucleus-cluster
+
+kubectl create deployment hello-app --image=gcr.io/google-samples/hello-app:2.0
+
+kubectl expose deployment hello-app --type=LoadBalancer --port 8080
+
+# task 3:  Set up an HTTP load balancer
+
+* Create an instance template.
+cat << EOF > startup.sh
+#! /bin/bash
+apt-get update
+apt-get install -y nginx
+service nginx start
+sed -i -- 's/nginx/Google Cloud Platform - '"\$HOSTNAME"'/' /var/www/html/index.nginx-debian.html
+EOF
+
+gcloud compute instance-templates create nucleus-template  --machine-type f1-micro --tags=allow-health-check --metadata-from-file startup-script=startup.sh
+
+* Create a target pool.
+gcloud compute target-pools create nucleus-pool
+
+* Create a managed instance group.
+gcloud compute instance-groups managed create nucleus-group \
+--base-instance-name nucleus-nginx \
+--size 2 \
+--template nucleus-template \
+--target-pool nucleus-pool
+
+gcloud compute instances list
+
+* Create a firewall rule to allow traffic (80/tcp).
+gcloud compute firewall-rules create nucleus-firewall --target-tags=allow-health-check --allow tcp:80
+
+* Create a health check.
+gcloud compute http-health-checks create nucleus-health-check
+
+~ additional:
+gcloud compute instance-groups managed set-named-ports nucleus-group --named-ports http:80
+
+* Create a backend service, and attach the managed instance group.
+gcloud compute backend-services create nucleus-backend --protocol HTTP --http-health-checks nucleus-health-check --global
+gcloud compute backend-services add-backend nucleus-backend \
+--instance-group nucleus-group \
+--instance-group-zone us-east1-b \
+--global
+
+* Create a URL map, and target the HTTP proxy to route requests to your URL map.
+gcloud compute url-maps create nucleus-map --default-service nucleus-backend
+gcloud compute target-http-proxies create nucleus-http-lb-proxy --url-map nucleus-map
+
+* Create a forwarding rule.
+gcloud compute forwarding-rules create nucleus-forwarding-rule \
+--global \
+--target-http-proxy nucleus-http-lb-proxy \
+--ports 80
+
+gcloud compute forwarding-rules list
+
+==========================
+verify:
+
+
+tear down:
+gcloud compute instances delete nucleus-jumphost
+kubectl delete deployment hello-app
+kubectl delete services hello-app
+gcloud container clusters delete nucleus-cluster
+
+tear down:
+1. delete load balancer
+2. delete backend service (not deleted in step 1)
+3. delete health check
+4. external static IP.
+5. delete target pool
+6. delete instance group
+7. delete instance template
+
+
+===
+issue:
+no network tag
+ - should be OK.
+no external IP
+ - in the forwarding rule
+naming
+ - nucleus-webserver*
+machine type
+ --machine-type f1-micro
+
+
+
+===================================
+scripts
+===================================
+
+
+gcloud config set compute/zone us-east1-b
+
+cat << EOF > startup.sh
+#! /bin/bash
+apt-get update
+apt-get install -y nginx
+service nginx start
+sed -i -- 's/nginx/Google Cloud Platform - '"\$HOSTNAME"'/' /var/www/html/index.nginx-debian.html
+EOF
+
+# changed machine type
+gcloud compute instance-templates create nucleus-template  --machine-type f1-micro --tags=allow-health-check --metadata-from-file startup-script=startup.sh
+gcloud compute target-pools create nucleus-pool --region us-east1
+
+# changed name
+gcloud compute instance-groups managed create nucleus-group --base-instance-name nucleus-webserver --size 2 --template nucleus-template --target-pool nucleus-pool
+gcloud compute instances list
+
+gcloud compute firewall-rules create nucleus-firewall --target-tags=allow-health-check --allow tcp:80
+gcloud compute http-health-checks create nucleus-health-check
+gcloud compute instance-groups managed set-named-ports nucleus-group --named-ports http:80
+gcloud compute backend-services create nucleus-backend --protocol HTTP --http-health-checks nucleus-health-check --global
+gcloud compute backend-services add-backend nucleus-backend --instance-group nucleus-group --instance-group-zone us-east1-b --global
+
+gcloud compute url-maps create nucleus-map --default-service nucleus-backend
+gcloud compute target-http-proxies create nucleus-http-lb-proxy --url-map nucleus-map
+gcloud compute forwarding-rules create nucleus-forwarding-rule --global --target-http-proxy nucleus-http-lb-proxy --ports 80
+gcloud compute forwarding-rules list
+
+
+=====
+#tear down
+
+gcloud compute forwarding-rules delete nucleus-forwarding-rule --global --quiet
+
+gcloud compute target-http-proxies delete nucleus-http-lb-proxy --quiet
+gcloud compute url-maps delete nucleus-map --quiet
+gcloud compute backend-services delete nucleus-backend --global --quiet
+gcloud compute http-health-checks delete nucleus-health-check --quiet
+gcloud compute firewall-rules delete nucleus-firewall --quiet
+
+gcloud compute instance-groups managed delete nucleus-group --quiet
+gcloud compute target-pools delete nucleus-pool --region us-east1 --quiet
+gcloud compute instance-templates delete nucleus-template --quiet
+
