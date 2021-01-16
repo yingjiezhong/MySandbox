@@ -38,7 +38,7 @@ class MyBSTTest {
     @Test
     void nthLargest() {
         MyBST bst = new MyBST(4, 2, 1, 3, 6, 5, 7);
-        int ret = bst.nthLargest(2);
+        int ret = bst.nthLargest(4);
         assertEquals(6, ret);
     }
 }

@@ -43,7 +43,7 @@ class DynamicOrderDeadlockTest {
                     int amount = rnd.nextInt(500);
                     if (from != to) {
                         try {
-                            DynamicOrderDeadlock.transferMoney(accounts[from], accounts[to], new DollarAmount(500));
+                            DynamicOrderDeadlock.transferMoney(accounts[from], accounts[to], new DollarAmount(amount));
                         } catch (InsufficientFundsException e) {
 //                            e.printStackTrace();
                         }

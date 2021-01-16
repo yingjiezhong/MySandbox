@@ -1,7 +1,7 @@
 package com.denofprogramming.thread.racecondition;
 
 public class LongWrapper {
-    private long l;
+    private volatile long l;
 
     public LongWrapper(long l) {
         this.l = l;
@@ -11,7 +11,7 @@ public class LongWrapper {
         return l;
     }
 
-    public void incrementValue() {
+    public synchronized void incrementValue() {
         l += 1;
     }
 

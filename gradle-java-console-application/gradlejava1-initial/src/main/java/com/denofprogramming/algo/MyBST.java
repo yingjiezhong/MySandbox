@@ -39,7 +39,7 @@ public class MyBST {
 
     private void nthLargest(Node node, int n, Count cur) {
 
-        if (node == null || cur.c >= n) {
+        if (node == null ) {
             return;
         }
 
@@ -53,6 +53,7 @@ public class MyBST {
         }
 
         nthLargest(node.left, n, cur);
+
 
     }
 
