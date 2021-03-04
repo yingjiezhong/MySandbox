@@ -1,5 +1,6 @@
 package com.denofprogramming.leetcode.dp;
 
+import java.util.HashMap;
 import java.util.Stack;
 
 /**
@@ -18,6 +19,7 @@ import java.util.Stack;
  *
  */
 public class PerfectSquares {
+    HashMap<Integer, Integer> map = new HashMap<>();
 
     public int solution(int n) {
         Stack<Integer> stack = new Stack<Integer>();
@@ -44,6 +46,10 @@ public class PerfectSquares {
      * @return
      */
     public int dpSolution(int n) {
+        if (map.containsKey(n)) {
+            return map.get(n);
+        }
+
         int count = 1000;
         int temp;
 
@@ -57,6 +63,7 @@ public class PerfectSquares {
                 count = Math.min(count, temp);
             }
         }
+        map.put(n, count);
         return count;
     }
 }
